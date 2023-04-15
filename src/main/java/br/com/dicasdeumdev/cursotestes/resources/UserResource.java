@@ -1,20 +1,24 @@
-package br.com.dicasdeumdev.cursotestes.cursotestes.resouurces;
+package br.com.dicasdeumdev.cursotestes.resources;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.dicasdeumdev.domain.User;
+import br.com.dicasdeumdev.cursotestes.domain.People;
+import br.com.dicasdeumdev.cursotestes.services.UserService;
 
 @RestController
 @RequestMapping(value = "user")
 public class UserResource {
 	
+	@Autowired
+	private UserService service;
+	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<User> findById(@PathVariable Integer id) {
-		
-		return ResponseEntity.ok().body((new User(1, "Valdir", "valdir@email.com", "1234")));
+	public ResponseEntity<People> findById(@PathVariable Integer id) {
+		return ResponseEntity.ok().body(service.findById(id));
 	}
 }
