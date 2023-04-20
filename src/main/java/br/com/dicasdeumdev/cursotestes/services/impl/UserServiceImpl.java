@@ -19,9 +19,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public People findById(Integer id) {
 		Optional<People> obj = repository.findById(id);
-		//if (obj.isPresent()) System.out.println("Usuário cadastrado = " + obj.get().getNome());
-		
-			
+		//if (obj.isPresent()) System.out.println("Usuário cadastrado = " + obj.get().getNome());		
 		
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado!"));
 		
