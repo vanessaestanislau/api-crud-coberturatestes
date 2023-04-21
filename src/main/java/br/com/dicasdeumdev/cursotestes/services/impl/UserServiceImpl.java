@@ -1,5 +1,6 @@
 package br.com.dicasdeumdev.cursotestes.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,11 @@ public class UserServiceImpl implements UserService {
 		//if (obj.isPresent()) System.out.println("Usuário cadastrado = " + obj.get().getNome());		
 		
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado!"));
-		
-	
-		
-		
-		
 	}
 	
-	
+	public List<People> findAll() {
+		return repository.findAll();
+	}
+			
 
 }
