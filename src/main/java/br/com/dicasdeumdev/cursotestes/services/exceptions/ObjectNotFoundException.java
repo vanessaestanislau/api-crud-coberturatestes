@@ -1,4 +1,4 @@
-package br.com.dicasdeumdev.cursotestes.resources.exception;
+package br.com.dicasdeumdev.cursotestes.services.exceptions;
 
 public class ObjectNotFoundException extends RuntimeException {
 

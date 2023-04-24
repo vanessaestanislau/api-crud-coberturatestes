@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 import br.com.dicasdeumdev.cursotestes.domain.People;
 import br.com.dicasdeumdev.cursotestes.domain.dto.PeopleDto;
 import br.com.dicasdeumdev.cursotestes.repositories.UserRepository;
-import br.com.dicasdeumdev.cursotestes.resources.exception.ObjectNotFoundException;
 import br.com.dicasdeumdev.cursotestes.services.UserService;
+import br.com.dicasdeumdev.cursotestes.services.exceptions.DataIntegratyViolationException;
+import br.com.dicasdeumdev.cursotestes.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,7 +36,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public People create(PeopleDto obj) { /*Esse obj dto precisa ser convertido num tipo People */
+		findByEmail(obj);
 		return repository.save(mapper.map(obj, People.class));
 	}
 		
+	private void findByEmail(PeopleDto obj) {
+		Optional<People> user = repository.findByEmail(obj.getEmail());
+		if(user.isPresent()) {
+			throw new DataIntegratyViolationException("E-mail já cadastrado no sistema");
+		}
+	}
 }
