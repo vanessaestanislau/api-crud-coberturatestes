@@ -51,6 +51,12 @@ public class UserServiceImpl implements UserService {
 		if(user.isPresent() && !user.get().getId().equals(obj.getId())) {
 			throw new DataIntegratyViolationException("E-mail já cadastrado no sistema");
 		}
+	}
+
+	@Override
+	public void delete(Integer id) {
+		findById(id);
+		repository.deleteById(id);
 	}	
 	
 }

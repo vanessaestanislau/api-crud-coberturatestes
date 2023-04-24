@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.dicasdeumdev.cursotestes.domain.People;
 import br.com.dicasdeumdev.cursotestes.domain.dto.PeopleDto;
 import br.com.dicasdeumdev.cursotestes.services.UserService;
 
@@ -24,13 +24,15 @@ import br.com.dicasdeumdev.cursotestes.services.UserService;
 @RequestMapping(value = "user")
 public class UserResource {
 	
+	private static final String ID = "/{id}";
+
 	@Autowired
 	private ModelMapper mapper; /*em formato de bean, tenho aqui uma instância do ModelMapper*/
 	
 	@Autowired
 	private UserService service;
 	
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = ID)
 	public ResponseEntity<PeopleDto> findById(@PathVariable Integer id) {
 		return ResponseEntity.ok().body(mapper.map(service.findById(id), PeopleDto.class));
 	}
@@ -52,14 +54,20 @@ public class UserResource {
 	@PostMapping
 	public ResponseEntity<PeopleDto> create(@RequestBody PeopleDto obj) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(service.create(obj).getId()).toUri();
+				.path(ID).buildAndExpand(service.create(obj).getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 
-	@PutMapping(value = "/{id}")
+	@PutMapping(value = ID)
 	public ResponseEntity<PeopleDto> update(@PathVariable Integer id, @RequestBody PeopleDto obj) {
 		obj.setId(id);
 		return ResponseEntity.ok().body(mapper.map(service.update(obj), PeopleDto.class));
+	}
+	
+	@DeleteMapping(value = ID)
+	public ResponseEntity<PeopleDto> delete(@PathVariable Integer id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();		
 	}
 
 }

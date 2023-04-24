@@ -14,4 +14,6 @@ public interface UserService {
 	People create(PeopleDto obj);
 	
 	People update(PeopleDto obj);
+	
+	void delete(Integer id);
 }
