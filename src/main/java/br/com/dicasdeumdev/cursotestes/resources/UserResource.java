@@ -1,5 +1,6 @@
 package br.com.dicasdeumdev.cursotestes.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.dicasdeumdev.cursotestes.domain.People;
 import br.com.dicasdeumdev.cursotestes.domain.dto.PeopleDto;
@@ -42,6 +46,13 @@ public class UserResource {
 				.body(service.findAll() //retorna lista de People
 						.stream().map(x -> mapper.map(x, PeopleDto.class)).collect(Collectors.toList()));
 										//cada obj dessa lista "x" estamos mapeando, transformando num dto e add no toList e retornando pro usuario
+	}
+	
+	@PostMapping
+	public ResponseEntity<PeopleDto> create(@RequestBody PeopleDto obj) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(service.create(obj).getId()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 }
 
