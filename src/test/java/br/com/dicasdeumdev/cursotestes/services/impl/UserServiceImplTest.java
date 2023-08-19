@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,8 @@ import br.com.dicasdeumdev.cursotestes.services.exceptions.ObjectNotFoundExcepti
 
 @SpringBootTest
 class UserServiceImplTest {
+
+	private static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado!";
 
 	private static final String SENHA = "123";
 
@@ -70,15 +73,34 @@ class UserServiceImplTest {
 	
 	@Test
 	void whenFindByIdThenReturnObjectNotFoundException() {
-		when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado!"));
+		when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
 		
 		try {
 			userService.findById(ID);
 		} catch (Exception ex) {
 			assertEquals(ObjectNotFoundException.class, ex.getClass());
-			assertEquals("Objeto não encontrado!", ex.getMessage());
+			assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
 		}
 	}
+	
+	@Test
+	void whenFindAllThenReturnListOfPeople() {
+		when(repository.findAll()).thenReturn(List.of(user));
+		
+		List<People> response = userService.findAll();
+		
+		assertNotNull(response);
+		assertEquals(1, response.size());
+		assertEquals(People.class, response.get(0).getClass());
+		
+		assertEquals(ID, response.get(0).getId());
+		assertEquals(NOME, response.get(0).getNome());
+		assertEquals(EMAIL, response.get(0).getEmail());
+		assertEquals(SENHA, response.get(0).getPassword());
+
+		
+	}
+	
 	
 	//método para iniciar valores de instância de usuários, evitando o nullpointer	
 	private void startUser() { 
