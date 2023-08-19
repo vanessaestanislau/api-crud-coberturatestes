@@ -2,6 +2,8 @@ package br.com.dicasdeumdev.cursotestes.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import br.com.dicasdeumdev.cursotestes.domain.People;
 import br.com.dicasdeumdev.cursotestes.domain.dto.PeopleDto;
 import br.com.dicasdeumdev.cursotestes.repositories.UserRepository;
+import br.com.dicasdeumdev.cursotestes.services.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -65,7 +68,17 @@ class UserServiceImplTest {
 		assertEquals(ID, response.getId());
 	}
 	
-	
+	@Test
+	void whenFindByIdThenReturnObjectNotFoundException() {
+		when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado!"));
+		
+		try {
+			userService.findById(ID);
+		} catch (Exception ex) {
+			assertEquals(ObjectNotFoundException.class, ex.getClass());
+			assertEquals("Objeto não encontrado!", ex.getMessage());
+		}
+	}
 	
 	//método para iniciar valores de instância de usuários, evitando o nullpointer	
 	private void startUser() { 
