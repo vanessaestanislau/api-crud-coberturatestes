@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public People create(PeopleDto obj) { /*Esse obj dto precisa ser convertido num tipo People */
+	public People create(PeopleDto obj) { 
 		findByEmail(obj);
 		return repository.save(mapper.map(obj, People.class));
 	}

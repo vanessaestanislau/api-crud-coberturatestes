@@ -2,7 +2,7 @@ package br.com.dicasdeumdev.cursotestes.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -96,10 +96,25 @@ class UserServiceImplTest {
 		assertEquals(ID, response.get(0).getId());
 		assertEquals(NOME, response.get(0).getNome());
 		assertEquals(EMAIL, response.get(0).getEmail());
-		assertEquals(SENHA, response.get(0).getPassword());
-
+		assertEquals(SENHA, response.get(0).getPassword());		
+	}
+	
+	@Test
+	void whenCreateThenReturnSuccess() {
+		when(repository.save(any())).thenReturn(user);
+		
+		People response = userService.create(userDto);
+		
+		assertNotNull(response);
+		assertEquals(People.class, response.getClass());
+		assertEquals(ID, response.getId());
+		assertEquals(NOME, response.getNome());
+		assertEquals(EMAIL, response.getEmail());
+		assertEquals(SENHA, response.getPassword());		
 		
 	}
+	
+	
 	
 	
 	//método para iniciar valores de instância de usuários, evitando o nullpointer	
