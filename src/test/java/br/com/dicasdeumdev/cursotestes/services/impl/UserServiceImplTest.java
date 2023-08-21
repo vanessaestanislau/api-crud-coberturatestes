@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import br.com.dicasdeumdev.cursotestes.domain.People;
 import br.com.dicasdeumdev.cursotestes.domain.dto.PeopleDto;
 import br.com.dicasdeumdev.cursotestes.repositories.UserRepository;
+import br.com.dicasdeumdev.cursotestes.services.exceptions.DataIntegratyViolationException;
 import br.com.dicasdeumdev.cursotestes.services.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
@@ -114,7 +116,18 @@ class UserServiceImplTest {
 		
 	}
 	
-	
+	@Test
+	void whenCreateThenReturnAnDatataIntegrityViolationException() {
+		when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+		
+		try {
+			optionalUser.get().setId(2);
+			userService.create(userDto);
+		} catch (Exception ex) {
+			assertEquals(DataIntegratyViolationException.class, ex.getClass());
+			assertEquals("E-mail já cadastrado no sistema", ex.getMessage());
+		}		
+	}
 	
 	
 	//método para iniciar valores de instância de usuários, evitando o nullpointer	
